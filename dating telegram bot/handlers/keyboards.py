@@ -4,7 +4,7 @@ from aiogram.types import (ReplyKeyboardMarkup, KeyboardButton,
 # меню
 main_kb = [
     [KeyboardButton(text='Смотреть анкеты'),
-     KeyboardButton(text='Профиль')],
+     KeyboardButton(text='Мой профиль')],
 ]
 main = ReplyKeyboardMarkup(keyboard=main_kb,
                            resize_keyboard=True,
