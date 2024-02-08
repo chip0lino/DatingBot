@@ -393,6 +393,8 @@ async def kurs_state(message: Message, bot: Bot, state: FSMContext):
 @router.message(Register_anketa.final)
 async def finally_state(message: Message, bot: Bot, state: FSMContext):
 	user_id: int = message.from_user.id
+	username = message.from_user.username
+	nickname = message.from_user.full_name
 	final = message.text
 
 	if final not in ["Подтвердить", "Редактировать"]:
@@ -432,6 +434,8 @@ async def finally_state(message: Message, bot: Bot, state: FSMContext):
 			cursor.execute('''
 			        INSERT INTO users (
 			            user_id,
+			            username,
+			            nickname,
 			            name,
 			            gender,
 			            age,
@@ -441,8 +445,8 @@ async def finally_state(message: Message, bot: Bot, state: FSMContext):
 			            kurs,
 			            faculty,
 			            grade
-			        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-			    ''', (user_id, name, gender, age, photion, anketa_description, znak_zodiaka, kurs, faculty, grade_user))
+			        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+			    ''', (user_id, username, nickname, name, gender, age, photion, anketa_description, znak_zodiaka, kurs, faculty, grade_user))
 			await state.clear()
 			conn.commit()
 
