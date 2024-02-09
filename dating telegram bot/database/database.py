@@ -15,7 +15,8 @@ cursor.execute('''
         zodiac_sign TEXT,
         kurs INTEGER,
         faculty TEXT,
-        grade INTEGER
+        grade INTEGER,
+        blocked TEXT # new
     )
 ''')
 
