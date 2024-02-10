@@ -61,3 +61,17 @@ async def like_ank(id):
         peoples_like_me = str(who_like)+','+str(id)
     cursor.execute("UPDATE like SET people_who_like = (?) WHERE user_id = {last_ank_id}".format(last_ank_id=last_id), (peoples_like_me, )) #добавление в спиоск людей которые лайкнули человека юзера
     conn.commit()
+
+#все люди которые лайкнули юзера
+async def who_like(id):
+    who_like = cursor.execute("SELECT people_who_like FROM like WHERE user_id = {id}".format(id=id)).fetchone()[0]
+    print(who_like)
+    if who_like==None or str(who_like)=="":
+        return "no likes"
+    else:
+        return tuple(map(int, who_like.split(",")))
+
+#анкета лайкнувшего человека
+async def like_person(user_id):
+    ank = cursor.execute("SELECT * FROM users WHERE user_id = {user_id}".format(user_id=user_id)).fetchall()[0]
+    return ank
