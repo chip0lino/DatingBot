@@ -36,3 +36,15 @@ async def like(message: Message):
 @router.message(F.text == "Назад в меню")
 async def back_to_menu(message: Message):
     await message.answer('Возвращаюсь в меню', reply_markup=kb.main)
+
+@router.message(F.text == 'Меня оценили')
+async def my_likes(message: Message):
+    like = await bd.who_like(message.from_user.id)
+    if like == "no likes":
+        await message.answer("Нет новых оценок")
+    else:
+        for user_id in like:
+            ank = await bd.like_person(user_id)
+            await message.answer_photo(photo=types.input_file.FSInputFile(f"photos/{ank[1]}.jpg"),
+                                       caption=f'Имя: {ank[2]}\nВозраст: {ank[4]}\nОписание анкеты: {ank[5]}\nЗЗ: {ank[6]}\nКурс: {ank[7]}\nФакультет: {ank[8]}',
+                                       reply_markup=kb.who_like)
