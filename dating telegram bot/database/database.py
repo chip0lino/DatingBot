@@ -3,18 +3,18 @@ import sqlite3
 conn = sqlite3.connect('database.db')
 cursor = conn.cursor()
 cursor.execute("CREATE TABLE IF NOT EXISTS users ("
-                    "user_id INTEGER PRIMARY KEY, "
+                    "user_id INTEGER PRIMARY KEY, " #0
                     "username TEXT, "
-                    "nickname TEXT, "
-                    " name TEXT, "
-                    "gender TEXT, "
+                    "nickname TEXT, " # 2ссылка на пользователя в телеге
+                    "name TEXT, "
+                    "gender TEXT, " #4
                     "age INTEGER, "
-                    "photo TEXT, "
+                    "photo TEXT, " #6
                     "anketa_description TEXT, "
-                    "zodiac_sign TEXT, "
-                    "kurs INTEGER, "
-                    "faculty TEXT, "
-                    "grade INTEGER, "
+                    "zodiac_sign TEXT, " #8
+                    "kurs INTEGER, " # курс
+                    "faculty TEXT, " # 10 факультет
+                    "grade INTEGER, " # бакалавр или магистратура
                     "blocked TEXT)")  # new 
   
 
@@ -28,10 +28,10 @@ conn.commit()
 #выбирает случайную анкету, удовлетворяющую интересам пользователя
 async def get_anket(user_id):
     gender = cursor.execute("SELECT gender FROM users WHERE user_id = {key}".format(key=user_id)).fetchone()[0]
-    if gender=="men":
-        desired = "woman"
-    elif gender=="woman":
-        desired = "men"
+    if gender=="male":
+        desired = "female"
+    elif gender=="female":
+        desired = "male"
     hidden = cursor.execute("SELECT hidden FROM like WHERE user_id = {id}".format(id=user_id)).fetchall()[0][0]+',1' # колонка hidden в бд включает в себя id разделенные запятой, изначально там должен находиться id пользователя и любой второй id например: {user_id1},{user_id2} и так далее
     hidden = tuple(map(int, hidden.split(",")))
     ank = cursor.execute("SELECT * FROM users WHERE gender = (?) AND user_id NOT IN {hidden} ORDER BY RANDOM() LIMIT 1".format(hidden=hidden), (desired,)).fetchall() # выбор рандомной анкеты id которой не в hidden и которая противоположна по полу

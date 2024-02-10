@@ -447,13 +447,19 @@ async def finally_state(message: Message, bot: Bot, state: FSMContext):
 			            grade
 			        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 			    ''', (user_id, username, nickname, name, gender, age, photion, anketa_description, znak_zodiaka, kurs, faculty, grade_user))
+			cursor.execute('''
+				  INSERT INTO like (
+				  	user_id,
+					hidden
+				  ) VALUES (?, ?)
+				  ''', (user_id, user_id))
 			await state.clear()
 			conn.commit()
 
 			keyboard1 = ReplyKeyboardMarkup(
 				keyboard=[
 					[KeyboardButton(text='Мой профиль')],
-					[KeyboardButton(text='Искать людей')]
+					[KeyboardButton(text='Смотреть анкеты')]
 				],
 				resize_keyboard=True
 			)

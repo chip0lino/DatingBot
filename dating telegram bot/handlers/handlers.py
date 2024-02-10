@@ -1,7 +1,7 @@
-from aiogram import Router, F, Bot, types
+from aiogram import Router, F, types, Bot
 from aiogram.types import Message
 import handlers.keyboards as kb
-from ..database import database as bd
+import database.database as bd
 
 router = Router()
 
@@ -10,7 +10,7 @@ router = Router()
 async def look_ankets(message: Message):
     ank = await bd.get_anket(message.from_user.id)
     if ank != 'no':
-        await message.answer_photo(photo=types.input_file.FSInputFile(f"photos/{ank[1]}.jpg"), caption=f'Имя: {ank[2]}\nВозраст: {ank[4]}\nОписание анкеты: {ank[5]}\nЗЗ: {ank[6]}\nКурс: {ank[7]}\nФакультет: {ank[8]}', reply_markup=kb.view)
+        await message.answer_photo(photo=types.input_file.FSInputFile(f"photos/{ank[6]}.jpg"), caption=f'Имя: {ank[4]}\nВозраст: {ank[5]}\nОписание анкеты: {ank[7]}\nЗЗ: {ank[8]}\nКурс: {ank[9]}\nФакультет: {ank[10]}', reply_markup=kb.view)
     else:
         await message.answer('Вы посмотрели все анкеты', reply_markup=kb.last)
 
@@ -35,13 +35,17 @@ async def back_to_menu(message: Message):
     await message.answer('Возвращаюсь в меню', reply_markup=kb.main)
 
 @router.message(F.text == 'Меня оценили')
-async def my_likes(message: Message):
+async def my_likes(message: Message, bot: Bot):
     like = await bd.who_like(message.from_user.id)
     if like == "no likes":
         await message.answer("Нет новых оценок")
     else:
         for user_id in like:
             ank = await bd.like_person(user_id)
-            await message.answer_photo(photo=types.input_file.FSInputFile(f"photos/{ank[1]}.jpg"),
+            await message.answer_photo(photo=types.input_file.FSInputFile(f"/photos/2.jpg"),
                                        caption=f'Имя: {ank[2]}\nВозраст: {ank[4]}\nОписание анкеты: {ank[5]}\nЗЗ: {ank[6]}\nКурс: {ank[7]}\nФакультет: {ank[8]}',
                                        reply_markup=kb.who_like)
+
+@router.message(F.text == "А")
+async def sending_photo(message: Message, bot: Bot):
+    await message.answer_photo(photo=types.input_file.FSInputFile("/home/sapsan/Projects/DatingBot/dating telegram bot/photos/1.jpg"), caption="Описание") #/home/sapsan/Projects/DatingBot/dating telegram bot

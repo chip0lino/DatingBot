@@ -12,9 +12,9 @@ main = ReplyKeyboardMarkup(keyboard=main_kb,
 
 # при просмотре анкет
 view_kb = [
-    [KeyboardButton(text='Нравится'),
-     KeyboardButton(text='Пропустить')],
-    [KeyboardButton(text='Назад в меню')],
+    [KeyboardButton(text='Нравится')],
+    [KeyboardButton(text='Пропустить'),
+     KeyboardButton(text='Назад в меню')],
 ]
 view = ReplyKeyboardMarkup(keyboard=view_kb,
                            resize_keyboard=True,

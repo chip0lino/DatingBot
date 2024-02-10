@@ -7,18 +7,19 @@ from state.register_state import Register_profile
 
 router = Router()
 
-
+# Меня оценили Редактировать профиль Назад в меню'
 @router.message(F.text == 'Мой профиль')
 async def my_profile(message: Message, bot: Bot):
 	user_id: int = message.from_user.id
 	keyboard = ReplyKeyboardMarkup(
 		keyboard=[
-			[KeyboardButton(text='Меня оценили')],
-			[KeyboardButton(text='Редактировать профиль')]
+			[KeyboardButton(text="Меня оценили")],
+			[KeyboardButton(text="Редактировать профиль"),
+			KeyboardButton(text="Назад в меню")]
 		],
 		resize_keyboard=True
-	)
 
+	)
 
 
 	cursor.execute("SELECT * FROM users WHERE user_id = ?", (user_id,))
