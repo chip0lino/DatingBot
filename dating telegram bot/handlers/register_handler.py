@@ -24,7 +24,7 @@ async def start_function(message: Message, bot: Bot):
         keyboard = ReplyKeyboardMarkup(
 	        keyboard=[
 		        [KeyboardButton(text='Мой профиль')],
-		        [KeyboardButton(text='Искать людей')]
+		        [KeyboardButton(text='Смотреть анкеты')]
 	        ],
 	        resize_keyboard=True
         )
@@ -167,7 +167,7 @@ async def photo_state(message: Message, bot: Bot, state: FSMContext):
 		file_id = photo.file_id
 		file_info = await bot.get_file(file_id)
 		file_path = file_info.file_path
-		destination = f'C:\\Users\\Egor\\Documents\\projects\\dating telegram bot\\photos/{file_id}.jpg'
+		destination = f'/home/sapsan/Projects/DatingBot/dating telegram bot/photos/{file_id}.jpg' #C:\\Users\\Egor\\Documents\\projects\\dating telegram bot\\photos/{file_id}.jpg
 		await bot.download_file(file_path, destination)
 		await state.update_data(file_id=file_id)
 		await state.update_data(destination=destination)

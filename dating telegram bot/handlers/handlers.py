@@ -1,11 +1,8 @@
 from aiogram import Router, F, Bot, types
-import config
 from aiogram.types import Message
-import keyboards as kb
-import database as bd
+import handlers.keyboards as kb
+from ..database import database as bd
 
-
-bot = Bot(token=config.BOT_TOKEN)
 router = Router()
 
 #отправка случайное анкеты юзеру
