@@ -4,10 +4,11 @@ from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton, FSInputF
 
 from database.database import cursor, conn
 from state.register_state import Register_profile
+import os
 
 router = Router()
 
-# Меня оценили Редактировать профиль Назад в меню'
+
 @router.message(F.text == 'Мой профиль')
 async def my_profile(message: Message, bot: Bot):
 	user_id: int = message.from_user.id
@@ -34,16 +35,17 @@ async def my_profile(message: Message, bot: Bot):
 		db_user_id = user_data[0] 
 		await bot.send_message(
 			chat_id=message.chat.id,
-			text=f'Добро пожаловать в ваш профиль!',
+			text=f'Добро пожаловать в ваш профиль!\nВаша анкета:',
 			reply_markup=keyboard
 		)
-	cursor.execute("SELECT * FROM users WHERE user_id=?", (user_id,))
+	cursor.execute("SELECT * FROM users WHERE user_id=(?)", (user_id,))
 	row = cursor.fetchone()
+	print(row)
 
 	if row:
-		user_id, name, gender, age, photo, anketa_description, zodiac_sign, kurs, faculty, grade_user = row
-
-		destination = f'C:\\Users\\Egor\\Documents\\projects\\dating telegram bot\\photos/{photo}.jpg'
+		user_id,  name, gender, age, photo, anketa_description, zodiac_sign, kurs, faculty, grade_user = row[0], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], row[11]
+		current_dir = os.path.split(os.path.dirname(__file__))[0] # путь к папке проекта
+		destination = f'{current_dir}/photos/{photo}.jpg'
 
 		if gender == "male":
 			gender = 'Мужской'
@@ -150,8 +152,8 @@ async def name_state(message: Message, bot: Bot, state: FSMContext):
 		conn.commit()
 		keyboard1 = ReplyKeyboardMarkup(
 			keyboard=[
-				[KeyboardButton(text='Мой профиль')],
-				[KeyboardButton(text='Искать людей')]
+				[KeyboardButton(text='Смотреть анкеты')],
+				[KeyboardButton(text='Мой профиль')]
 			],
 			resize_keyboard=True,
 		)
@@ -194,8 +196,8 @@ async def age_state(message: Message, bot: Bot, state: FSMContext):
 			conn.commit()
 			keyboard1 = ReplyKeyboardMarkup(
 				keyboard=[
-					[KeyboardButton(text='Мой профиль')],
-					[KeyboardButton(text='Искать людей')]
+					[KeyboardButton(text='Смотреть анкеты')],
+					[KeyboardButton(text='Мой профиль')]
 				],
 				resize_keyboard=True,
 			)
@@ -239,8 +241,8 @@ async def gender_state(message: Message, bot: Bot, state: FSMContext):
 		conn.commit()
 		keyboard1 = ReplyKeyboardMarkup(
 			keyboard=[
-				[KeyboardButton(text='Мой профиль')],
-				[KeyboardButton(text='Искать людей')]
+				[KeyboardButton(text='Смотреть анкеты')],
+				[KeyboardButton(text='Мой профиль')]
 			],
 			resize_keyboard=True,
 		)
@@ -270,15 +272,16 @@ async def photo_state(message: Message, bot: Bot, state: FSMContext):
 		file_id = photo.file_id
 		file_info = await bot.get_file(file_id)
 		file_path = file_info.file_path
-		destination = f'C:\\Users\\Egor\\Documents\\projects\\dating telegram bot\\photos/{file_id}.jpg'
+		current_dir = os.path.split(os.path.dirname(__file__))[0] # путь к папке проекта
+		destination = f'{current_dir}/photos/{file_id}.jpg'
 		await bot.download_file(file_path, destination)
 
 		cursor.execute("UPDATE users SET photo = ? WHERE user_id = ?", (file_id, user_id))
 		conn.commit()
 		keyboard1 = ReplyKeyboardMarkup(
 			keyboard=[
-				[KeyboardButton(text='Мой профиль')],
-				[KeyboardButton(text='Искать людей')]
+				[KeyboardButton(text='Смотреть анкеты')],
+				[KeyboardButton(text='Мой профиль')]
 			],
 			resize_keyboard=True,
 		)
@@ -327,8 +330,8 @@ async def description_state(message: Message, bot: Bot, state: FSMContext):
 		conn.commit()
 		keyboard1 = ReplyKeyboardMarkup(
 			keyboard=[
-				[KeyboardButton(text='Мой профиль')],
-				[KeyboardButton(text='Искать людей')]
+				[KeyboardButton(text='Смотреть анкеты')],
+				[KeyboardButton(text='Мой профиль')]
 			],
 			resize_keyboard=True,
 		)
@@ -382,8 +385,8 @@ async def zodiak_state(message: Message, bot: Bot, state: FSMContext):
 		conn.commit()
 		keyboard1 = ReplyKeyboardMarkup(
 			keyboard=[
-				[KeyboardButton(text='Мой профиль')],
-				[KeyboardButton(text='Искать людей')]
+				[KeyboardButton(text='Смотреть анкеты')],
+				[KeyboardButton(text='Мой профиль')]
 			],
 			resize_keyboard=True,
 		)
@@ -427,8 +430,8 @@ async def grade_state(message: Message, bot: Bot, state: FSMContext):
 		conn.commit()
 		keyboard1 = ReplyKeyboardMarkup(
 			keyboard=[
-				[KeyboardButton(text='Мой профиль')],
-				[KeyboardButton(text='Искать людей')]
+				[KeyboardButton(text='Смотреть анкеты')],
+				[KeyboardButton(text='Мой профиль')]
 			],
 			resize_keyboard=True,
 		)
@@ -489,8 +492,8 @@ async def faculty_state(message: Message, bot: Bot, state: FSMContext):
 		conn.commit()
 		keyboard1 = ReplyKeyboardMarkup(
 			keyboard=[
-				[KeyboardButton(text='Мой профиль')],
-				[KeyboardButton(text='Искать людей')]
+				[KeyboardButton(text='Смотреть анкеты')],
+				[KeyboardButton(text='Мой профиль')]
 			],
 			resize_keyboard=True,
 		)
@@ -530,8 +533,8 @@ async def kurs_state(message: Message, bot: Bot, state: FSMContext):
 		conn.commit()
 		keyboard1 = ReplyKeyboardMarkup(
 			keyboard=[
-				[KeyboardButton(text='Мой профиль')],
-				[KeyboardButton(text='Искать людей')]
+				[KeyboardButton(text='Смотреть анкеты')],
+				[KeyboardButton(text='Мой профиль')]
 			],
 			resize_keyboard=True,
 		)
