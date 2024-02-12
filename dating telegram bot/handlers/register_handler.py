@@ -5,11 +5,12 @@ from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton, ReplyKey
 
 from database.database import cursor, conn
 from state.register_state import Register_anketa
-import os
 
 
 router = Router()
 
+
+# поменять путь к папке: строка №172, 791
 
 @router.message(CommandStart())
 async def start_function(message: Message, bot: Bot):
@@ -24,8 +25,8 @@ async def start_function(message: Message, bot: Bot):
         db_user_id = user_data[0]
         keyboard = ReplyKeyboardMarkup(
 	        keyboard=[
-				[KeyboardButton(text='Смотреть анкеты')],
-		        [KeyboardButton(text='Мой профиль')]
+		        [KeyboardButton(text='Мой профиль')],
+		        [KeyboardButton(text='Искать людей')]
 	        ],
 	        resize_keyboard=True
         )
@@ -43,7 +44,8 @@ async def start_function(message: Message, bot: Bot):
 Пожалуйста, зарегистрируйтесь.\n
 Для заполнения анкеты напишите /anketa.
             ''',
-            reply_to_message_id=message.message_id
+            reply_to_message_id=message.message_id,
+	        reply_markup=ReplyKeyboardRemove()
         )
 
 
@@ -52,8 +54,7 @@ async def anketa(message: Message, bot: Bot, state: FSMContext):
 	await state.clear()
 	await bot.send_message(
 		chat_id=message.chat.id,
-		text='Вы отменили создание анкеты!\n'
-		     'Для создания новой напишите /start',
+		text='Успешно отменено!',
 		reply_markup=ReplyKeyboardRemove())
 
 
@@ -65,7 +66,6 @@ async def anketa(message: Message, bot: Bot, state: FSMContext):
 	user_link = f'<a href="tg://user?id={user_id}">{nickname}</a>'
 
 	await state.set_state(Register_anketa.name)
-	await message.answer('Вы начали создание анкеты, для отмены напишите /cancel')
 	await bot.send_message(
 		chat_id=message.chat.id,
 		text=f'''<b>{user_link}</b>, начнем с заполнения вашего имени.\n
@@ -169,8 +169,7 @@ async def photo_state(message: Message, bot: Bot, state: FSMContext):
 		file_id = photo.file_id
 		file_info = await bot.get_file(file_id)
 		file_path = file_info.file_path
-		current_dir = os.path.split(os.path.dirname(__file__))[0] # путь к папке проекта
-		destination = f'{current_dir}/photos/{file_id}.jpg'
+		destination = f'C:\\Users\\light\\PycharmProjects\\tgbotikaio3\\photos/{file_id}.jpg'
 		await bot.download_file(file_path, destination)
 		await state.update_data(file_id=file_id)
 		await state.update_data(destination=destination)
@@ -450,19 +449,13 @@ async def finally_state(message: Message, bot: Bot, state: FSMContext):
 			            grade
 			        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
 			    ''', (user_id, username, nickname, name, gender, age, photion, anketa_description, znak_zodiaka, kurs, faculty, grade_user))
-			cursor.execute('''
-				  INSERT INTO like (
-				  	user_id,
-					hidden
-				  ) VALUES (?, ?)
-				  ''', (user_id, user_id))
 			await state.clear()
 			conn.commit()
 
 			keyboard1 = ReplyKeyboardMarkup(
 				keyboard=[
-					[KeyboardButton(text='Смотреть анкеты')],
-					[KeyboardButton(text='Мой профиль')]
+					[KeyboardButton(text='Мой профиль')],
+					[KeyboardButton(text='Искать людей')]
 				],
 				resize_keyboard=True
 			)
@@ -795,8 +788,7 @@ async def photo_state(message: Message, bot: Bot, state: FSMContext):
 		file_id = photo.file_id
 		file_info = await bot.get_file(file_id)
 		file_path = file_info.file_path
-		current_dir = os.path.split(os.path.dirname(__file__))[0] # путь к папке проекта
-		destination = f'{current_dir}/photos/{file_id}.jpg'
+		destination = f'C:\\Users\\light\\PycharmProjects\\tgbotikaio3\\photos/{file_id}.jpg'
 		await bot.download_file(file_path, destination)
 		await state.update_data(file_id=file_id)
 		await state.update_data(destination=destination)
